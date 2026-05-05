@@ -33,7 +33,7 @@ class AuthController extends Controller
             'role'     => 'user',
         ]);
 
-        Auth::login($user);
+        Auth::login($user, $request->boolean('remember'));
 
         return response()->json([
             'user' => $this->serializeUser($user),
@@ -51,7 +51,7 @@ class AuthController extends Controller
             'password.required' => 'Le mot de passe est obligatoire.',
         ]);
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             throw ValidationException::withMessages([
                 'email' => ['Ces identifiants ne correspondent à aucun compte.'],
             ]);

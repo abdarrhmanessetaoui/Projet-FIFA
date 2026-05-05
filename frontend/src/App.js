@@ -48,6 +48,7 @@ import AdminVilles from "./pages/admin/AdminVilles";
 import AdminStadiums from "./pages/admin/AdminStadiums";
 import AdminReservations from "./pages/admin/AdminReservations";
 import AdminTournament from "./pages/admin/AdminTournament";
+import AdminUsers from "./pages/admin/AdminUsers";
 
 /*
   HEIGHT BUDGET (sticky bars above page content):
@@ -123,6 +124,7 @@ function App() {
                   <Route path="/admin/stadiums" element={<AdminRoute><AdminStadiums /></AdminRoute>} />
                   <Route path="/admin/reservations" element={<AdminRoute><AdminReservations /></AdminRoute>} />
                   <Route path="/admin/tournament" element={<AdminRoute><AdminTournament /></AdminRoute>} />
+                  <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
                 </Routes>
             </main>
 

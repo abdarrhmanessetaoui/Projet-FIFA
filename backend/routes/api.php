@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\VilleController;
 use App\Http\Controllers\Api\V1\FanZoneController;
 use App\Http\Controllers\Api\V1\HospitalityController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -132,5 +133,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/selectionneurs', [SelectionneurController::class, 'store']);
         Route::put('/selectionneurs/{selectionneur}', [SelectionneurController::class, 'update']);
         Route::delete('/selectionneurs/{selectionneur}', [SelectionneurController::class, 'destroy']);
+
+        // Users management (Super Admin only)
+        Route::get('/users', [UserController::class, 'index']);
+        Route::put('/users/{user}', [UserController::class, 'update']);
+        Route::delete('/users/{user}', [UserController::class, 'destroy']);
     });
 });

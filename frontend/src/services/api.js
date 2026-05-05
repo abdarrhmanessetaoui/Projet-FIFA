@@ -148,7 +148,7 @@ export const updateTickerItem = (id, data) => api.put(`/admin/ticker/${id}`, dat
 export const deleteTickerItem = (id) => api.delete(`/admin/ticker/${id}`);
 
 // ── Hospitalities ───────────────────────────────────────────
-export const getHospitalities = () => api.get("/hospitalities");
+export const getHospitalities = () => api.get("/hospitalities?per_page=-1");
 export const createHospitality = (data) => api.post("/hospitalities", data);
 export const updateHospitality = (id, data) => {
   if (data instanceof FormData) {
@@ -208,5 +208,10 @@ export const getStadiums = () => api.get("/stadiums");
 export const createStadium = (data) => api.post("/admin/stadiums", data);
 export const updateStadium = (id, data) => api.put(`/admin/stadiums/${id}`, data);
 export const deleteStadium = (id) => api.delete(`/admin/stadiums/${id}`);
+
+// ── Users (Super Admin) ──────────────────────────────────────
+export const adminGetUsers = () => api.get("/admin/users");
+export const adminUpdateUser = (id, data) => api.put(`/admin/users/${id}`, data);
+export const adminDeleteUser = (id) => api.delete(`/admin/users/${id}`);
 
 export default api;

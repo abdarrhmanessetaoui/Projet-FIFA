@@ -127,8 +127,8 @@ export default function Login() {
     setServerError(null);
 
     try {
-      const res = await loginUser({ email, password: pass });
-      login(res.user);
+      const res = await loginUser({ email, password: pass, remember });
+      login(res.user, remember);
       navigate(from, { replace: true });
     } catch (err) {
       const serverErrors = err.errors || {};
@@ -200,8 +200,12 @@ export default function Login() {
           font-family: ${FB}; font-size: 11px; color: ${textSecondary}; user-select: none; transition: color 0.3s;
         }
         .remember-label input[type=checkbox] {
-          appearance: none; width: 14px; height: 14px;
-          border: 1px solid ${border}; border-radius: 4px; background: transparent;
+          appearance: none; -webkit-appearance: none; 
+          width: 14px !important; height: 14px !important; 
+          min-width: 14px !important; max-width: 14px !important;
+          padding: 0 !important; margin: 0; box-sizing: border-box;
+          border: 1.5px solid ${darkMode ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"}; 
+          border-radius: 4px; background: ${darkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.02)"};
           cursor: pointer; position: relative; transition: border-color 0.3s, background 0.3s; flex-shrink: 0;
         }
         .remember-label input[type=checkbox]:checked { background: ${textPrimary}; border-color: ${textPrimary}; }
@@ -256,7 +260,11 @@ export default function Login() {
         @keyframes toastIn { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
       `}</style>
 
-      {/* Status handled by react-hot-toast */}
+      {toast && (
+        <div className={`toast ${toast.type}`}>
+          {toast.type === "success" ? "✓" : "✕"} {toast.message}
+        </div>
+      )}
 
       <div className="login-wrap">
         <div className="card">
@@ -266,8 +274,8 @@ export default function Login() {
           </div>
 
           <div className="soc-grid">
-            <button className="soc-btn"><GoogleIcon /> Google</button>
-            <button className="soc-btn"><FacebookIcon /> Facebook</button>
+            <button className="soc-btn" onClick={() => showToast("error", "Connexion avec Google non implémentée pour le moment.")}><GoogleIcon /> Google</button>
+            <button className="soc-btn" onClick={() => showToast("error", "Connexion avec Facebook non implémentée pour le moment.")}><FacebookIcon /> Facebook</button>
           </div>
 
           <Divider border={border} textMuted={textMuted} />
