@@ -39,6 +39,11 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/login',    [AuthController::class, 'login']);
     Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/auth/reset-password', [AuthController::class, 'resetPassword']);
+    
+    // This route is required by Laravel to generate the reset link in the email
+    Route::get('/reset-password/{token}', function ($token) {
+        return redirect('http://localhost:3000/reset-password/' . $token . '?email=' . request('email'));
+    })->name('password.reset');
 
     Route::get('/auth/{provider}/redirect', [App\Http\Controllers\SocialAuthController::class, 'redirectToProvider']);
     Route::get('/auth/{provider}/callback', [App\Http\Controllers\SocialAuthController::class, 'handleProviderCallback']);
