@@ -723,6 +723,7 @@ class ApiController extends Controller
             'description' => 'nullable|string',
             'opened_year' => 'nullable|string',
             'surface'     => 'nullable|string',
+            'location_url'=> 'nullable|string',
         ]);
 
         $stadium = \App\Models\Stadium::create($validated);
@@ -740,6 +741,7 @@ class ApiController extends Controller
             'description' => 'nullable|string',
             'opened_year' => 'nullable|string',
             'surface'     => 'nullable|string',
+            'location_url'=> 'nullable|string',
         ]);
 
         $stadium->update($validated);

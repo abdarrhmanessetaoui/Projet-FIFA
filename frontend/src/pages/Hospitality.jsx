@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getHospitalities } from "../services/api";
+import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 
 const D = "'Bebas Neue', sans-serif";
@@ -7,23 +7,12 @@ const B = "'DM Sans', sans-serif";
 
 export default function Hospitality() {
   const { darkMode } = useTheme();
+  const navigate = useNavigate();
   const [mounted, setMounted] = useState(false);
-  const [dbHospitalities, setDbHospitalities] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 40);
     return () => clearTimeout(t);
-  }, []);
-
-  useEffect(() => {
-    getHospitalities()
-      .then(data => {
-        const results = Array.isArray(data) ? data : (data.data || []);
-        setDbHospitalities(results);
-      })
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
   }, []);
 
   const tBg     = darkMode ? "#0a0a0a" : "#ffffff";
@@ -31,9 +20,8 @@ export default function Hospitality() {
   const tSub    = darkMode ? "rgba(255,255,255,0.7)" : "#4a4a4a";
   const cardBg  = darkMode ? "#ffffff" : "#0a0a0a"; 
   const cardText = darkMode ? "#0a0a0a" : "#ffffff";
-  const badgeColor = "#e60000"; // Changed to red
+  const badgeColor = "#e60000"; 
 
-  // Static fallback data from screenshot if DB is empty or doesn't match
   const staticOffers = [
     {
       id: 1,
@@ -68,18 +56,9 @@ export default function Hospitality() {
     }
   ];
 
-  const offers = dbHospitalities.length > 0 ? dbHospitalities.map((h, i) => {
-    const perks = Array.isArray(h.perks)
-      ? h.perks
-      : (typeof h.perks === 'string' ? JSON.parse(h.perks || '[]') : staticOffers[i % 3].bullets);
-    return {
-      id:      h.id,
-      title:   h.tier   || staticOffers[i % 3].title,
-      desc:    h.description || staticOffers[i % 3].desc,
-      bullets: perks.length > 0 ? perks : staticOffers[i % 3].bullets,
-      badge:   h.badge  || (i === 0 ? "Populaire" : null),
-    };
-  }) : staticOffers;
+  const handleReserve = (id) => {
+    navigate(`/tickets?hospitality_id=${id}`);
+  };
 
   return (
     <div style={{
@@ -106,51 +85,6 @@ export default function Hospitality() {
           line-height: 1;
           margin: 0 0 20px 0;
           letter-spacing: 0.02em;
-        }
-
-        .hosp-top-flex {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          flex-wrap: wrap;
-          gap: 30px;
-        }
-
-        .hosp-desc {
-          flex: 1;
-          min-width: 300px;
-          max-width: 500px;
-          font-size: 16px;
-          color: ${tSub};
-          line-height: 1.5;
-          margin: 0;
-        }
-
-        .hosp-steps {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          font-size: 14px;
-          color: ${tSub};
-          font-weight: 500;
-        }
-
-        .hosp-steps-row {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          flex-wrap: wrap;
-        }
-
-        .hosp-step {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .hosp-step-icon {
-          font-size: 16px;
-          color: ${tText};
         }
 
         .fz-grid {
@@ -230,6 +164,9 @@ export default function Hospitality() {
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
+          text-decoration: none;
+          width: fit-content;
+          text-align: center;
         }
 
         .fz-buy-btn:hover {
@@ -306,6 +243,7 @@ export default function Hospitality() {
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
+          text-decoration: none;
         }
 
         .supp-btn:hover {
@@ -320,50 +258,42 @@ export default function Hospitality() {
         @media (max-width: 768px) {
           .fz-grid { grid-template-columns: 1fr; }
           .supp-grid { grid-template-columns: 1fr; }
-          .hosp-top-flex { flex-direction: column; }
         }
       `}</style>
 
       <section>
         <div className="hw">
-          
           <div className="hosp-header-container">
             <h1 className="hosp-title">OFFRES DE MATCHES</h1>
-            
-            <div className="hosp-top-flex" style={{ display: 'none' }}>
-              {/* Removed text and steps as requested */}
-            </div>
           </div>
 
-          {loading ? (
-            <div style={{ padding: 100, textAlign: "center", color: tSub }}>
-              Chargement des offres...
-            </div>
-          ) : (
-            <div className="fz-grid">
-              {offers.map((offer) => (
-                <div key={offer.id} className="fz-card">
-                  {offer.badge && (
-                    <div className="fz-badge">
-                      <span style={{ fontSize: 14 }}>✧</span> {offer.badge}
-                    </div>
-                  )}
-                  
-                  <h3 className="fz-name" dangerouslySetInnerHTML={{ __html: offer.title.replace(' ', '<br/>') }} />
-                  
-                  <p className="fz-card-desc">{offer.desc}</p>
-                  
-                  <ul className="fz-bullets">
-                    {offer.bullets.map((bullet, idx) => (
-                      <li key={idx}>{bullet}</li>
-                    ))}
-                  </ul>
+          <div className="fz-grid">
+            {staticOffers.map((offer) => (
+              <div key={offer.id} className="fz-card">
+                {offer.badge && (
+                  <div className="fz-badge">
+                    <span style={{ fontSize: 14 }}>✧</span> {offer.badge}
+                  </div>
+                )}
+                
+                <h3 className="fz-name" dangerouslySetInnerHTML={{ __html: offer.title.replace(' ', '<br/>') }} />
+                <p className="fz-card-desc">{offer.desc}</p>
+                
+                <ul className="fz-bullets">
+                  {offer.bullets.map((bullet, idx) => (
+                    <li key={idx}>{bullet}</li>
+                  ))}
+                </ul>
 
-                  <button className="fz-buy-btn">Réserver</button>
-                </div>
-              ))}
-            </div>
-          )}
+                <button 
+                  onClick={() => handleReserve(offer.id)} 
+                  className="fz-buy-btn"
+                >
+                  Réserver
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -372,7 +302,6 @@ export default function Hospitality() {
           <h2 className="hosp-title" style={{ fontSize: 'clamp(40px, 6vw, 60px)', marginBottom: 16 }}>
             OFFRES SUPPLÉMENTAIRES
           </h2>
-          {/* Removed desc paragraph as requested */}
 
           <div className="supp-grid">
             <div className="supp-card">
@@ -384,7 +313,7 @@ export default function Hospitality() {
                 <p className="supp-desc">
                   L'offre la plus exclusive. Bénéficiez d'une expérience exhaustive avec une personnalisation complète des services et l'accès aux meilleurs services.
                 </p>
-                <button className="supp-btn">Enregistrer votre intérêt</button>
+                <Link to="/tickets" className="supp-btn">Enregistrer votre intérêt</Link>
               </div>
             </div>
 
@@ -397,7 +326,7 @@ export default function Hospitality() {
                 <p className="supp-desc">
                   Choisissez les hôtels, les expériences et/ou les voitures de location qui rendront votre séjour inoubliable.
                 </p>
-                <button className="supp-btn">Acheter Maintenant</button>
+                <Link to="/hotels" className="supp-btn">Acheter Maintenant</Link>
               </div>
             </div>
           </div>

@@ -13,11 +13,14 @@ class FanZoneController extends Controller
     {
         return FanZone::with('city')->get()->map(function($fz) {
             return [
-                'id'          => $fz->id,
-                'city_id'     => $fz->city_id,
-                'city_name'   => $fz->city?->name,
-                'zone_label'  => $fz->zone_label,
-                'image_url'   => $fz->image_url,
+                'id'           => $fz->id,
+                'city_id'      => $fz->city_id,
+                'city_name'    => $fz->city?->name,
+                'zone_label'   => $fz->zone_label,
+                'description'  => $fz->description,
+                'image_url'    => $fz->image_url,
+                'location_url' => $fz->location_url,
+                'capacity'     => $fz->capacity,
             ];
         });
     }
@@ -25,9 +28,13 @@ class FanZoneController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'city_id'    => 'required|exists:cities,id',
-            'zone_label' => 'required|string|max:150',
-            'image'      => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'city_id'      => 'required|exists:cities,id',
+            'zone_label'   => 'required|string|max:150',
+            'description'  => 'nullable|string',
+            'location_url' => 'nullable|string',
+            'image_url'    => 'nullable|string',
+            'image'        => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'capacity'     => 'nullable|string|max:255',
         ]);
 
         if ($request->hasFile('image')) {
@@ -35,12 +42,10 @@ class FanZoneController extends Controller
             $validated['image_url'] = '/storage/' . $path;
         }
 
-        // Set defaults for other fields to avoid DB errors if they are NOT NULL
         $validated['stadium_name'] = 'Official Fan Zone';
-        $validated['capacity']     = 'Various';
+        $validated['capacity']     = $validated['capacity'] ?? 'Various';
         $validated['matches_count'] = 64;
         $validated['address']      = 'Official Site';
-        $validated['description']  = 'FIFA Fan Festival';
         $validated['group_label']  = 'Official';
         $validated['status']       = 'active';
 
@@ -57,9 +62,13 @@ class FanZoneController extends Controller
         $fz = FanZone::findOrFail($id);
         
         $validated = $request->validate([
-            'city_id'    => 'sometimes|required|exists:cities,id',
-            'zone_label' => 'sometimes|required|string|max:150',
-            'image'      => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'city_id'      => 'sometimes|required|exists:cities,id',
+            'zone_label'   => 'sometimes|required|string|max:150',
+            'description'  => 'nullable|string',
+            'location_url' => 'nullable|string',
+            'image_url'    => 'nullable|string',
+            'image'        => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'capacity'     => 'nullable|string|max:255',
         ]);
 
         if ($request->hasFile('image')) {

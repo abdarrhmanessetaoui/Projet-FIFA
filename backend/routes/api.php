@@ -15,6 +15,8 @@ use App\Http\Controllers\Api\V1\FanZoneController;
 use App\Http\Controllers\Api\V1\HospitalityController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\HotelController;
+use App\Http\Controllers\TicketBookingController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +61,13 @@ Route::prefix('v1')->group(function () {
     Route::put('/hospitalities/{hospitality}', [HospitalityController::class, 'update']);
     Route::delete('/hospitalities/{hospitality}', [HospitalityController::class, 'destroy']);
 
+    // Highlights (Temps Forts)
+    Route::get('/highlights', [ApiController::class, 'indexHighlights']);
+    Route::post('/highlights/{highlight}/view', [ApiController::class, 'incrementHighlightView']);
+    Route::post('/highlights/{highlight}/like', [ApiController::class, 'toggleHighlightLike']);
+    Route::get('/highlights/{highlight}/comments', [ApiController::class, 'indexHighlightComments']);
+    Route::post('/highlights/{highlight}/comments', [ApiController::class, 'storeHighlightComment']);
+
     // Teams & Groups
     Route::get('/teams', [TeamController::class, 'index']);
     Route::get('/teams/{team}', [TeamController::class, 'show']);
@@ -78,9 +87,11 @@ Route::prefix('v1')->group(function () {
     Route::get('/tickets', [ApiController::class, 'indexTickets']);
     Route::get('/referees', [ApiController::class, 'indexReferees']);
     Route::get('/stadiums', [ApiController::class, 'indexStadiums']);
+    Route::get('/hotels', [HotelController::class, 'index']);
 
     // Joueurs
     Route::get('/joueurs',                  [JoueurController::class, 'index']);
+    Route::get('/joueurs/top-scorers',      [JoueurController::class, 'topScorers']);
     Route::get('/joueurs/{joueur}',         [JoueurController::class, 'show']);
     // Selectionneurs
     Route::get('/selectionneurs',           [SelectionneurController::class, 'index']);
@@ -94,6 +105,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/reservations', [ReservationController::class, 'store']);
         Route::get('/reservations/user', [ReservationController::class, 'userReservations']);
         Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
+        
+        // Ticket Bookings
+        Route::post('/ticket-bookings', [TicketBookingController::class, 'store']);
+        Route::get('/ticket-bookings',  [TicketBookingController::class, 'index']);
     });
 
     // Admin routes (protected)
@@ -134,9 +149,29 @@ Route::prefix('v1')->group(function () {
         Route::put('/selectionneurs/{selectionneur}', [SelectionneurController::class, 'update']);
         Route::delete('/selectionneurs/{selectionneur}', [SelectionneurController::class, 'destroy']);
 
+        // Cities
+        Route::post('/cities', [CityController::class, 'store']);
+        Route::post('/cities/{id}', [CityController::class, 'update']); // Use POST for FormData with _method=PUT
+        Route::delete('/cities/{id}', [CityController::class, 'destroy']);
+
         // Users management (Super Admin only)
         Route::get('/users', [UserController::class, 'index']);
         Route::put('/users/{user}', [UserController::class, 'update']);
         Route::delete('/users/{user}', [UserController::class, 'destroy']);
+
+        // Stadiums
+        Route::post('/stadiums', [ApiController::class, 'storeStadium']);
+        Route::put('/stadiums/{id}', [ApiController::class, 'updateStadium']);
+        Route::delete('/stadiums/{id}', [ApiController::class, 'destroyStadium']);
+
+        // Hotels
+        Route::get('/hotels', [HotelController::class, 'index']);
+        Route::post('/hotels', [HotelController::class, 'store']);
+        Route::put('/hotels/{hotel}', [HotelController::class, 'update']);
+        Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy']);
+
+        // Reservations
+        Route::get('/reservations', [ReservationController::class, 'index']);
+        Route::patch('/reservations/{id}/status', [ReservationController::class, 'updateStatus']);
     });
 });

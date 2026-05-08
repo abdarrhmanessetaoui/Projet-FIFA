@@ -36,7 +36,7 @@ export default function News() {
       setError(null);
       try {
         const response = await axios.get(`${API_BASE_URL}/news`, {
-          params: { q: filter, language: "en", pageSize: 20 }
+          params: { language: "en", pageSize: 50 }
         });
         
         const articles = response.data.articles || [];
@@ -53,12 +53,14 @@ export default function News() {
       }
     };
     fetchNews();
-  }, [filter]);
+  }, []);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchTerm.trim()) setFilter(searchTerm);
-  };
+  const filteredNews = news.filter(n => {
+    const s = searchTerm.toLowerCase();
+    const titleMatch = n.title?.toLowerCase().includes(s);
+    const descMatch = n.description?.toLowerCase().includes(s);
+    return titleMatch || descMatch;
+  });
 
   const formatDate = (dateStr) => {
     try {
@@ -89,8 +91,7 @@ export default function News() {
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,300&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         .hw { max-width: 1380px; margin: 0 auto; padding: 0 clamp(16px,3vw,48px); }
-        .pkg { border-radius:10px; overflow:hidden; display:flex; flex-direction:column; transition:transform 0.22s ease, box-shadow 0.22s ease; background: var(--card-bg); border: 1px solid var(--border-main); }
-        .pkg:hover { transform:translateY(-5px); border-color: var(--border-hover); box-shadow: 0 10px 40px rgba(0,0,0,0.05); }
+        .pkg { border-radius:10px; overflow:hidden; display:flex; flex-direction:column; background: var(--card-bg); border: 1px solid var(--border-main); }
         .btn-shim { position:relative; overflow:hidden; }
         .btn-shim .sh { position:absolute; top:0; left:-80%; width:50%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent); pointer-events:none; }
         .btn-shim:hover .sh { animation:shim 0.5s ease forwards; }
@@ -98,6 +99,9 @@ export default function News() {
         .g-news { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 24px; }
         @media(max-width: 768px) { .g-news { grid-template-columns: 1fr; } }
         
+        .cal-filter-bar::-webkit-scrollbar { display: none; }
+        .cal-filter-bar { scrollbar-width: none; }
+
         /* ── RESET VISITED LINKS (NO PURPLE) ── */
         a, a:visited {
           color: inherit;
@@ -106,42 +110,32 @@ export default function News() {
       `}</style>
 
       {/* HERO SECTION */}
-      <section className="hw" style={{ position: "relative", paddingTop: 100, paddingBottom: 60 }}>
-        <h1 style={{ fontFamily: FONT_D, fontSize: "clamp(48px, 6vw, 80px)", fontWeight: 900, textTransform: "uppercase", marginBottom: 60 }}>
+      <section className="hw" style={{ position: "relative", paddingTop: 100, paddingBottom: 32 }}>
+        <h1 style={{ fontFamily: FONT_D, fontSize: "clamp(48px, 6vw, 80px)", fontWeight: 900, textTransform: "uppercase", marginBottom: 32 }}>
           Actualités
         </h1>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "center" }}>
-          <form onSubmit={handleSearch} style={{ display: "flex", background: darkMode ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)", border: `1px solid var(--border-main)`, borderRadius: 100, overflow: "hidden", maxWidth: 400, flex: 1 }}>
-            <input type="text" placeholder="Chercher un sujet..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
-              style={{ background: "transparent", border: "none", outline: "none", color: "var(--text-main)", padding: "12px 20px", flex: 1, fontFamily: FONT_B, fontSize: 14 }} />
-            <button type="submit" style={{ background: "var(--btn-bg)", color: "var(--btn-text)", border: "none", padding: "0 20px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <FiSearch size={16} />
-            </button>
-          </form>
+        
+        <div style={{ marginBottom: 40, position: "relative", maxWidth: 600 }}>
+          <FiSearch style={{ position: "absolute", left: 20, top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", fontSize: 20 }} />
+          <input 
+            type="text" 
+            placeholder="Rechercher une actualité..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "16px 20px 16px 50px",
+              borderRadius: 100,
+              border: `1px solid var(--border-main)`,
+              background: "transparent",
+              color: "var(--text-main)",
+              fontFamily: FONT_B,
+              fontSize: 16,
+              outline: "none"
+            }}
+          />
         </div>
       </section>
-
-      {/* TABS */}
-      <div className="hw" style={{ marginBottom: 40 }}>
-        <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 10, scrollbarWidth: "none" }}>
-          {categories.map(cat => {
-            const isSel = filter === cat.query;
-            return (
-              <button key={cat.label} onClick={() => setFilter(cat.query)} style={{
-                background: isSel ? "var(--btn-bg)" : "transparent",
-                color: isSel ? "var(--btn-text)" : "var(--text-muted)",
-                border: isSel ? `1px solid var(--btn-bg)` : `1px solid var(--border-main)`,
-                padding: "10px 22px", borderRadius: 100, fontSize: 12, fontWeight: 800,
-                cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.2s",
-                textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: FONT_B
-              }} onMouseOver={e => !isSel && (e.currentTarget.style.borderColor = "var(--text-muted)")}
-                 onMouseOut={e => !isSel && (e.currentTarget.style.borderColor = "var(--border-main)")}>
-                {cat.label}
-              </button>
-            )
-          })}
-        </div>
-      </div>
 
       {/* CONTENT */}
       <section className="hw" style={{ paddingBottom: 100 }}>
@@ -157,15 +151,13 @@ export default function News() {
           </div>
         ) : (
           <div className="g-news">
-            {news.map((item, i) => (
+            {filteredNews.map((item, i) => (
               <a href={item.url || "#"} target="_blank" rel="noopener noreferrer" key={i} className="pkg" style={{ textDecoration: "none", color: tText }}>
                 <div style={{ height: 220, overflow: "hidden", position: "relative" }}>
                   <img 
                     src={getImageUrl(item.urlToImage || item.img)} 
                     alt={item.title} 
-                    style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s ease" }}
-                    onMouseOver={e => e.currentTarget.style.transform = "scale(1.05)"}
-                    onMouseOut={e => e.currentTarget.style.transform = "translateY(0) scale(1)"} 
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   />
                   <div style={{ position: "absolute", inset: 0, background: tCardGrad }} />
                   {i === 0 && (

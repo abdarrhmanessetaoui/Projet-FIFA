@@ -103,11 +103,12 @@ const AdminSidebar = ({ isOpen, onClose }) => {
           <div className="sidebar-group-label">Réservations</div>
           <Link to="/admin/reservations" className={`sidebar-link ${isActive('/admin/reservations') ? 'active' : ''}`} onClick={onClose}><FiList /> <span>Réservations</span></Link>
           <Link to="/admin/tickets" className={`sidebar-link ${isActive('/admin/tickets') ? 'active' : ''}`} onClick={onClose}><FiFileText /> <span>Billetterie</span></Link>
-          <Link to="/admin/hospitality" className={`sidebar-link ${isActive('/admin/hospitality') ? 'active' : ''}`} onClick={onClose}><FiStar /> <span>Hospitalité</span></Link>
+
           <Link to="/admin/fanzones" className={`sidebar-link ${isActive('/admin/fanzones') ? 'active' : ''}`} onClick={onClose}><FiMapPin /> <span>Fan Zones</span></Link>
           
           <div className="sidebar-group-label">Infrastructure</div>
           <Link to="/admin/stadiums" className={`sidebar-link ${isActive('/admin/stadiums') ? 'active' : ''}`} onClick={onClose}><FiMapPin /> <span>Stades</span></Link>
+          <Link to="/admin/hotels" className={`sidebar-link ${isActive('/admin/hotels') ? 'active' : ''}`} onClick={onClose}><FiStar /> <span>Hôtels</span></Link>
           <Link to="/admin/villes" className={`sidebar-link ${isActive('/admin/villes') ? 'active' : ''}`} onClick={onClose}><FiMapPin /> <span>Villes</span></Link>
           <Link to="/admin/pays" className={`sidebar-link ${isActive('/admin/pays') ? 'active' : ''}`} onClick={onClose}><FiGlobe /> <span>Pays</span></Link>
 

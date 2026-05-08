@@ -19,12 +19,16 @@ class FanZoneDynamicSeeder extends Seeder
             [
                 'ville' => 'New York/New Jersey',
                 'name' => 'FIFA Fan Festival New York/New Jersey',
-                'image_url' => 'https://images.unsplash.com/photo-1459749411177-042180ceea72?q=80&w=1200',
+                'description' => 'The ultimate destination for fans in New York and New Jersey! Experience live match broadcasts on massive screens, live music, and family-friendly activities in the heart of the city.',
+                'image_url' => 'https://upload.wikimedia.org/wikipedia/commons/e/e0/FIFA_Fan_Fest_Rio_de_Janeiro_2014.jpg',
+                'location_url' => 'https://www.google.com/maps/search/?api=1&query=Central+Park+New+York',
             ],
             [
                 'ville' => 'Mexico City',
                 'name' => 'FIFA Fan Festival Mexico City',
-                'image_url' => 'https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=1200',
+                'description' => 'Join the passion in Mexico City! The Zócalo becomes the epicenter of football fever with incredible food, cultural performances, and every goal celebrated with Mexican intensity.',
+                'image_url' => 'https://upload.wikimedia.org/wikipedia/commons/4/43/Fan_Fest_Moscow_2018.jpg',
+                'location_url' => 'https://www.google.com/maps/search/?api=1&query=Zocalo+Mexico+City',
             ],
         ];
 
@@ -38,8 +42,9 @@ class FanZoneDynamicSeeder extends Seeder
                 'matches_count' => 64,
                 'address' => 'Official Celebration Site',
                 'zone_label' => $fz['name'],
-                'description' => 'Experience the beautiful game with thousands of fans.',
+                'description' => $fz['description'],
                 'image_url' => $fz['image_url'],
+                'location_url' => $fz['location_url'],
                 'group_label' => 'Official',
                 'status' => 'active',
             ]);

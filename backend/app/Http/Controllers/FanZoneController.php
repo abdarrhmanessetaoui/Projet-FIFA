@@ -92,6 +92,7 @@ class FanZoneController extends Controller
             'zone_label'    => 'nullable|string|max:150',
             'description'   => 'nullable|string',
             'image_url'     => 'nullable|string',
+            'location_url'  => 'nullable|string',
             'group_label'   => 'nullable|string|max:50',
             'status'        => 'required|in:active,inactive,centenary',
         ]);
@@ -119,6 +120,7 @@ class FanZoneController extends Controller
             'zone_label'    => 'nullable|string|max:150',
             'description'   => 'nullable|string',
             'image_url'     => 'nullable|string',
+            'location_url'  => 'nullable|string',
             'group_label'   => 'nullable|string|max:50',
             'status'        => 'sometimes|required|in:active,inactive,centenary',
         ]);

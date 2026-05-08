@@ -171,9 +171,8 @@ export default function AdminUsers() {
           cursor: pointer;
         }
         .admin-badge {
-          padding: 4px 10px; borderRadius: 100px; fontSize: 10px; fontWeight: 800;
-          textTransform: uppercase; border: 1px solid ${border};
-          background: ${surface}; color: ${textPrimary};
+          font-family: ${FB}; font-size: 11px; font-weight: 800;
+          text-transform: uppercase; color: ${textPrimary};
         }
       `}</style>
 

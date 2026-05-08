@@ -111,6 +111,16 @@ export const getCity = (slug) => api.get(`/cities/${slug}`);
 export const getAccommodation = (id) => api.get(`/accommodations/${id}`);
 export const getAccommodations = (slug, params = {}) => api.get(`/cities/${slug}/accommodations`, { params });
 
+export const adminCreateCity = (data) => api.post("/admin/cities", data);
+export const adminUpdateCity = (id, data) => {
+  if (data instanceof FormData) {
+    data.append("_method", "PUT");
+    return api.post(`/admin/cities/${id}`, data);
+  }
+  return api.put(`/admin/cities/${id}`, data);
+};
+export const adminDeleteCity = (id) => api.delete(`/admin/cities/${id}`);
+
 // ── Fan Zones, Cities & Countries (New Dynamic System) ────────────────
 export const getFanZones = () => api.get("/fan-zones");
 export const getFanZone = (id) => api.get(`/fan-zones/${id}`);
@@ -208,6 +218,13 @@ export const getStadiums = () => api.get("/stadiums");
 export const createStadium = (data) => api.post("/admin/stadiums", data);
 export const updateStadium = (id, data) => api.put(`/admin/stadiums/${id}`, data);
 export const deleteStadium = (id) => api.delete(`/admin/stadiums/${id}`);
+
+// ── Hotels ───────────────────────────────────────────────────
+export const getHotels = () => api.get("/hotels");
+export const adminGetHotels = () => api.get("/admin/hotels");
+export const createHotel = (data) => api.post("/admin/hotels", data);
+export const updateHotel = (id, data) => api.put(`/admin/hotels/${id}`, data);
+export const deleteHotel = (id) => api.delete(`/admin/hotels/${id}`);
 
 // ── Users (Super Admin) ──────────────────────────────────────
 export const adminGetUsers = () => api.get("/admin/users");

@@ -19,6 +19,7 @@ class Stadium extends Model
         'description',
         'opened_year',
         'surface',
+        'location_url',
     ];
 
     public function city()
