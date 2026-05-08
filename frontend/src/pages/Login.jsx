@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
-import { loginUser } from "../services/api";
+import { loginUser, getSocialRedirect } from "../services/api";
 
 const FD = "'Bebas Neue', sans-serif";
 const FB = "'DM Sans', sans-serif";
@@ -145,6 +145,15 @@ export default function Login() {
     }
   };
 
+  const handleSocialLogin = async (provider) => {
+    try {
+      const res = await getSocialRedirect(provider);
+      window.location.href = res.url;
+    } catch (err) {
+      showToast("error", "Erreur lors de la redirection sociale.");
+    }
+  };
+
   return (
     <>
       <style>{`
@@ -274,8 +283,8 @@ export default function Login() {
           </div>
 
           <div className="soc-grid">
-            <button className="soc-btn" onClick={() => showToast("error", "Connexion avec Google non implémentée pour le moment.")}><GoogleIcon /> Google</button>
-            <button className="soc-btn" onClick={() => showToast("error", "Connexion avec Facebook non implémentée pour le moment.")}><FacebookIcon /> Facebook</button>
+            <button className="soc-btn" onClick={() => handleSocialLogin("google")}><GoogleIcon /> Google</button>
+            <button className="soc-btn" onClick={() => handleSocialLogin("facebook")}><FacebookIcon /> Facebook</button>
           </div>
 
           <Divider border={border} textMuted={textMuted} />

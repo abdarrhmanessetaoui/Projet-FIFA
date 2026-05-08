@@ -40,6 +40,9 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/auth/reset-password', [AuthController::class, 'resetPassword']);
 
+    Route::get('/auth/{provider}/redirect', [App\Http\Controllers\SocialAuthController::class, 'redirectToProvider']);
+    Route::get('/auth/{provider}/callback', [App\Http\Controllers\SocialAuthController::class, 'handleProviderCallback']);
+
     // Fan Zones, Cities & Countries
     Route::get('/pays', [PaysController::class, 'index']);
     Route::post('/pays', [PaysController::class, 'store']);

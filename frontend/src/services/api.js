@@ -106,6 +106,7 @@ export const logout = () => api.post("/auth/logout");
 export const getAuthUser = () => api.get("/auth/user");
 export const forgotPassword = (email) => api.post("/auth/forgot-password", { email });
 export const resetPassword = (data) => api.post("/auth/reset-password", data);
+export const getSocialRedirect = (provider) => api.get(`/auth/${provider}/redirect`);
 export const updateProfile = (data) => api.put("/auth/profile", data);
 
 // ── Cities & Accommodations ──────────────────────────────────
