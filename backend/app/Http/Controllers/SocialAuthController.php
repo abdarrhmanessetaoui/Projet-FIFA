@@ -17,7 +17,7 @@ class SocialAuthController extends Controller
         return response()->json(['url' => $url]);
     }
 
-    public function handleProviderCallback($provider)
+    public function handleProviderCallback(Request $request, $provider)
     {
         try {
             $socialUser = Socialite::driver($provider)->stateless()->user();
@@ -44,6 +44,7 @@ class SocialAuthController extends Controller
         }
 
         Auth::login($user, true);
+        $request->session()->regenerate();
 
         return response()->json([
             'user' => [
