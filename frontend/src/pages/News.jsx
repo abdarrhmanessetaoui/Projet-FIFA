@@ -157,6 +157,7 @@ export default function News() {
                   <img 
                     src={getImageUrl(item.urlToImage || item.img)} 
                     alt={item.title} 
+                    onError={(e) => { e.target.src = "https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1000"; }}
                     style={{ width: "100%", height: "100%", objectFit: "cover" }}
                   />
                   <div style={{ position: "absolute", inset: 0, background: tCardGrad }} />
