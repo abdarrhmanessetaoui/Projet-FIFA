@@ -37,6 +37,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res.data,
   (err) => {
+    const isAuthCheck = err.config?.url === "/auth/user" || err.config?.url?.endsWith("/auth/user");
+    if (err.response?.status === 401 && isAuthCheck) {
+      return Promise.reject(err.response?.data || { message: "Unauthenticated" });
+    }
     const msg = err.response?.data?.message || "Something went wrong";
     console.error("[API Error]", msg);
     return Promise.reject(err.response?.data || { message: msg });
