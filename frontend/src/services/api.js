@@ -37,10 +37,17 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res.data,
   (err) => {
-    const isAuthCheck = err.config?.url === "/auth/user" || err.config?.url?.endsWith("/auth/user");
+    // 1. Silent check for authentication (initial load)
+    const isAuthCheck = err.config?.url?.includes("/auth/user");
     if (err.response?.status === 401 && isAuthCheck) {
       return Promise.reject(err.response?.data || { message: "Unauthenticated" });
     }
+
+    // 2. Suppress noise for validation errors (422) or throttle errors
+    if (err.response?.status === 422) {
+      return Promise.reject(err.response?.data || { message: "Validation error" });
+    }
+
     const msg = err.response?.data?.message || "Something went wrong";
     console.error("[API Error]", msg);
     return Promise.reject(err.response?.data || { message: msg });

@@ -16,7 +16,6 @@ protected $fillable = [
     'password',
     'role',
     'google_id',
-    'facebook_id',
 ];
 
     protected $hidden = [
