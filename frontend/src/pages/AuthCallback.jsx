@@ -19,11 +19,17 @@ export default function AuthCallback() {
         withCredentials: true 
       })
       .then(res => {
-        login(res.data.user, true);
-        navigate("/");
+        console.log("Social login success:", res.data);
+        if (res.data.user) {
+          login(res.data.user, true);
+          navigate("/");
+        } else {
+          console.error("No user data in response");
+          navigate("/login?error=no_user_data");
+        }
       })
       .catch(err => {
-        console.error("Social login error", err);
+        console.error("Social login error details:", err.response?.data || err.message);
         navigate("/login?error=social_auth_failed");
       });
     } else {
