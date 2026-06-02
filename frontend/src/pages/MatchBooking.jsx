@@ -28,6 +28,7 @@ export default function MatchBooking() {
   useEffect(() => {
     fetchMatch();
     setMounted(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchId]);
 
   const fetchMatch = async () => {
