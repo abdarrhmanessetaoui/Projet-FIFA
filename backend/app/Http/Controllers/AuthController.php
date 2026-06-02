@@ -107,6 +107,10 @@ class AuthController extends Controller
 
         $data = $request->only(['name', 'email']);
 
+        if (isset($data['email']) && $data['email'] !== $user->email) {
+            $data['email_verified_at'] = null;
+        }
+
         if (!empty($data)) {
             $user->update($data);
         }

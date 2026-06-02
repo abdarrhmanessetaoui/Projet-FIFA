@@ -356,7 +356,7 @@ export default function Tickets() {
                 > - </button>
                 <span style={{ fontSize: 18, fontWeight: 900, minWidth: 20, textAlign: "center" }}>{quantity}</span>
                 <button 
-                  onClick={() => setQuantity(q => Math.min(3, q + 1))}
+                  onClick={() => setQuantity(q => Math.min(Math.min(3, activeTicket?.available || 3), q + 1))}
                   style={{ width: 32, height: 32, borderRadius: "50%", border: `1px solid ${tBorder}`, background: tCardBg, color: tText, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                 > + </button>
               </div>
