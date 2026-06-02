@@ -37,7 +37,8 @@ export default function AdminTicker() {
     setLoading(true);
     try {
       const data = await adminGetTicker();
-      setItems(data.data || data || []);
+      const itemsArray = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
+      setItems(itemsArray);
     } catch { console.error("Error fetching ticker"); }
     finally { setLoading(false); }
   };
